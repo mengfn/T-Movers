@@ -1,0 +1,10 @@
+paper model done
+paper policy done
+
+64 puzzles x 15.0 min
+                      paper model   paper policy
+          carriers         57.556         57.465
+   puller fraction          0.698          0.697
+      speed [cm/s]          0.211          0.207
+  progress [d_cor]          3.456          3.190
+            solved          0.156          0.203

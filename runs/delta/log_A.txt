@@ -1,0 +1,15 @@
+devices [CudaDevice(id=0)] | obs 8 | agents 120
+eval paper rule: solved  4.7% | final dist 6.81 d_cor
+behaviour cloning: nll 1.394 -> 0.275, pull agreement 0.959
+eval BC start: solved  1.6% | final dist 6.94 d_cor
+update    10 |   1397s |      469 decisions/s | reward +0.0021 | solved 89/89 | dist 6.63 d_cor | pull 0.74 | entropy 0.273 | v_loss 0.0839
+update    20 |   1484s |      883 decisions/s | reward +0.0006 | solved 12/12 | dist 6.49 d_cor | pull 0.87 | entropy 0.187 | v_loss 0.0105
+update    30 |   1572s |     1251 decisions/s | reward +0.0006 | solved 18/18 | dist 6.35 d_cor | pull 0.94 | entropy 0.117 | v_loss 0.0120
+update    40 |   1661s |     1579 decisions/s | reward +0.0008 | solved 33/33 | dist 6.33 d_cor | pull 0.96 | entropy 0.080 | v_loss 0.0173
+update    50 |   1748s |     1875 decisions/s | reward +0.0015 | solved 66/965 | dist 6.44 d_cor | pull 0.96 | entropy 0.071 | v_loss 0.0277
+update    60 |   1838s |     2139 decisions/s | reward +0.0010 | solved 41/76 | dist 6.51 d_cor | pull 0.93 | entropy 0.105 | v_loss 0.0192
+update    70 |   1927s |     2380 decisions/s | reward +0.0005 | solved 14/24 | dist 6.52 d_cor | pull 0.94 | entropy 0.105 | v_loss 0.0078
+update    80 |   2016s |     2601 decisions/s | reward +0.0008 | solved 36/54 | dist 6.51 d_cor | pull 0.95 | entropy 0.091 | v_loss 0.0162
+update    90 |   2105s |     2803 decisions/s | reward +0.0007 | solved 40/67 | dist 6.62 d_cor | pull 0.96 | entropy 0.078 | v_loss 0.0157
+eval update   100: solved  0.0% | final dist 8.37 d_cor
+update   100 |   2502s |     2619 decisions/s | reward +0.0019 | solved 82/943 | dist 6.56 d_cor | pull 0.90 | entropy 0.164 | v_loss 0.0321

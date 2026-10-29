@@ -1,0 +1,16 @@
+{
+  "policy": "paper rule",
+  "arena": "small",
+  "n_sites": 15,
+  "seeds": 8,
+  "minutes": 15.0,
+  "solved": 3,
+  "solve_times_s": [
+    661,
+    840,
+    209
+  ],
+  "shown_seed_index": 4,
+  "shown_solved": true,
+  "shown_time_s": 217.95948791503906
+}

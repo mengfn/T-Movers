@@ -1,0 +1,5 @@
+small arena, N_max 15 | 64 puzzles x 30.0 min | optimal path 7.92 d_cor | devices [CudaDevice(id=0)]
+ paper model: solved 93.8% (60/64) | time   527.0 s | path  102.3 d_cor | final dist  0.27 d_cor | 173 s
+  paper rule: solved 87.5% (56/64) | time   634.6 s | path  128.0 d_cor | final dist  0.96 d_cor | 170 s
+       MAPPO: solved 85.9% (55/64) | time   598.6 s | path  107.9 d_cor | final dist  0.62 d_cor | 178 s
+          BC: solved 93.8% (60/64) | time   735.3 s | path  137.6 d_cor | final dist  0.40 d_cor | 172 s

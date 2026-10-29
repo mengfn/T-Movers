@@ -1,0 +1,14 @@
+{
+  "policy": "MAPPO",
+  "seeds": 8,
+  "minutes": 30.0,
+  "solved": 3,
+  "solve_times_s": [
+    518,
+    1534,
+    958
+  ],
+  "shown_seed_index": 0,
+  "shown_solved": true,
+  "shown_time_s": 527.203125
+}

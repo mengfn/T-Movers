@@ -1,0 +1,15 @@
+{
+  "policy": "paper rule",
+  "seeds": 8,
+  "minutes": 30.0,
+  "solved": 4,
+  "solve_times_s": [
+    845,
+    850,
+    941,
+    1632
+  ],
+  "shown_seed_index": 0,
+  "shown_solved": true,
+  "shown_time_s": 854.5224609375
+}

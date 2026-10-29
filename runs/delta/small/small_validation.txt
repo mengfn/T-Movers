@@ -1,0 +1,11 @@
+W1028 12:29:57.428611    3062 cuda_timer.cc:88] Delay kernel timed out: measured time has sub-optimal accuracy. There may be a missing warmup execution, please investigate in Nsight Systems.
+paper model done
+paper policy done
+
+64 puzzles x 15.0 min
+                      paper model   paper policy
+          carriers          6.223          6.144
+   puller fraction          0.653          0.654
+      speed [cm/s]          0.186          0.180
+  progress [d_cor]          6.956          6.797
+            solved          0.703          0.688

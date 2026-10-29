@@ -1,0 +1,5 @@
+devices: [CudaDevice(id=0)]
+batch    256:     31,731 decisions/s (    3,173 simulated s/s) | rollout of 64 per update ~   0.52 s
+batch   1024:     59,296 decisions/s (    5,930 simulated s/s) | rollout of 64 per update ~   1.11 s
+batch   2048:     71,625 decisions/s (    7,162 simulated s/s) | rollout of 64 per update ~   1.83 s
+PPO update (batch 2048, rollout 64): 2.28 s

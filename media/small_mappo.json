@@ -1,0 +1,18 @@
+{
+  "policy": "MAPPO",
+  "arena": "small",
+  "n_sites": 15,
+  "seeds": 8,
+  "minutes": 15.0,
+  "solved": 5,
+  "solve_times_s": [
+    796,
+    683,
+    546,
+    248,
+    494
+  ],
+  "shown_seed_index": 5,
+  "shown_solved": true,
+  "shown_time_s": 256.9394836425781
+}

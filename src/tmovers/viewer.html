@@ -1,0 +1,260 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>T-Movers Viewer</title>
+<style>
+  :root {
+    --bg: #f4f3ef; --panel: #ffffffe6; --text: #1d1d1b; --muted: #6b6a66;
+    --border: #d9d7d0; --accent: #d6453d;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #17181a; --panel: #222326e6; --text: #ecebe7; --muted: #9d9c97;
+      --border: #3a3b3f; --accent: #ef6a5f;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #17181a; --panel: #222326e6; --text: #ecebe7; --muted: #9d9c97;
+    --border: #3a3b3f; --accent: #ef6a5f;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--bg); color: var(--text);
+    font: 13px/1.4 ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+  #view { position: fixed; inset: 0; }
+  .panel { position: fixed; background: var(--panel); border: 1px solid var(--border);
+    border-radius: 10px; backdrop-filter: blur(6px); }
+  #info { top: 12px; left: 12px; padding: 10px 12px; max-width: calc(100vw - 24px); }
+  #info h1 { font-size: 14px; margin: 0 0 4px; }
+  #info .stats { font-variant-numeric: tabular-nums; color: var(--muted); }
+  #info .stats b { color: var(--text); font-weight: 600; }
+  #solved { color: var(--accent); font-weight: 700; }
+  .legend { display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap; color: var(--muted); }
+  .dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%;
+    margin-right: 4px; vertical-align: -1px; }
+  #bar { left: 12px; right: 12px; bottom: 12px; padding: 8px 10px; display: flex;
+    gap: 10px; align-items: center; flex-wrap: wrap; }
+  #bar button, #bar select { font: inherit; color: var(--text); background: transparent;
+    border: 1px solid var(--border); border-radius: 6px; padding: 4px 10px; cursor: pointer; }
+  #bar button:hover { border-color: var(--muted); }
+  #scrub { flex: 1 1 200px; min-width: 120px; accent-color: var(--accent); }
+  #clock { font-variant-numeric: tabular-nums; min-width: 92px; text-align: right; }
+  .hint { color: var(--muted); font-size: 12px; }
+  @media (max-width: 560px) { .hint { display: none; } }
+</style>
+<script type="importmap">
+{ "imports": {
+  "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+  "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+} }
+</script>
+</head>
+<body>
+<div id="view"></div>
+<div id="info" class="panel">
+  <h1 id="title">T-Movers</h1>
+  <div class="stats">
+    carriers <b id="n-att">0</b> · pullers <b id="n-pull">0</b> ·
+    informed <b id="n-inf">0</b> <span id="solved"></span>
+  </div>
+  <div class="legend">
+    <span><span class="dot" style="background:#e8a33d"></span>informed puller</span>
+    <span><span class="dot" style="background:#2f6fd0"></span>puller</span>
+    <span><span class="dot" style="background:#8a8a8a"></span>lifter</span>
+  </div>
+</div>
+<div id="bar" class="panel">
+  <button id="play" aria-label="Play or pause">▶ Play</button>
+  <input id="scrub" type="range" min="0" value="0" step="1" aria-label="Frame">
+  <span id="clock">00:00.0</span>
+  <select id="speed" aria-label="Playback speed">
+    <option value="0.5">0.5×</option><option value="1" selected>1×</option>
+    <option value="2">2×</option><option value="4">4×</option>
+  </select>
+  <button id="cam" aria-label="Toggle camera">3D view</button>
+  <span class="hint">space: play · ←/→: step · drag: orbit · scroll: zoom</span>
+</div>
+
+<script id="data" type="application/json">__TMOVERS_DATA__</script>
+<script type="module">
+import * as THREE from "three";
+import { OrbitControls } from "three/addons/controls/OrbitControls.js";
+
+const D = JSON.parse(document.getElementById("data").textContent);
+const N = D.sites.pos.length, T = D.qpos.length;
+const STATUS_COLOR = [null, 0xe8a33d, 0x2f6fd0, 0x8a8a8a];
+const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+
+// --- scene -----------------------------------------------------------------
+const view = document.getElementById("view");
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+view.appendChild(renderer.domElement);
+const scene = new THREE.Scene();
+scene.add(new THREE.HemisphereLight(0xffffff, 0x888888, 1.6));
+const sun = new THREE.DirectionalLight(0xffffff, 1.4);
+sun.position.set(-10, -15, 30);
+scene.add(sun);
+
+const [xmin, ymin, xmax, ymax] = D.bounds;
+const cx = (xmin + xmax) / 2, cy = (ymin + ymax) / 2;
+
+const floor = new THREE.Mesh(new THREE.PlaneGeometry(xmax - xmin + 2, ymax - ymin + 2),
+  new THREE.MeshStandardMaterial({ color: 0xe9e6dd, roughness: 1 }));
+floor.position.set(cx, cy, -D.wall_z);
+scene.add(floor);
+
+const wallMat = new THREE.MeshStandardMaterial({ color: 0x5a5a5a, roughness: 0.8 });
+for (const [c, h] of D.walls) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(2 * h[0], 2 * h[1], 2 * D.wall_z), wallMat);
+  m.position.set(c[0], c[1], 0);
+  scene.add(m);
+}
+
+const load = new THREE.Group();
+const loadMat = new THREE.MeshStandardMaterial({ color: 0xd6453d, roughness: 0.5 });
+for (const [c, h] of D.load) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(2 * h[0], 2 * h[1], 2 * D.load_z), loadMat);
+  m.position.set(c[0], c[1], 0);
+  load.add(m);
+}
+scene.add(load);
+
+// Ants: one sphere instance per attachment site, hidden when the site is empty.
+const antR = D.ant_radius;
+const ants = new THREE.InstancedMesh(new THREE.SphereGeometry(antR, 12, 8),
+  new THREE.MeshStandardMaterial({ roughness: 0.6 }), N);
+ants.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+for (let i = 0; i < N; i++) ants.setColorAt(i, new THREE.Color(0xffffff));
+scene.add(ants);
+
+// Pull forces: one line segment per site, zero length unless pulling.
+const arrowPos = new Float32Array(N * 6), arrowCol = new Float32Array(N * 6);
+const arrowGeo = new THREE.BufferGeometry();
+arrowGeo.setAttribute("position", new THREE.BufferAttribute(arrowPos, 3).setUsage(THREE.DynamicDrawUsage));
+arrowGeo.setAttribute("color", new THREE.BufferAttribute(arrowCol, 3).setUsage(THREE.DynamicDrawUsage));
+scene.add(new THREE.LineSegments(arrowGeo, new THREE.LineBasicMaterial({ vertexColors: true })));
+
+// Trail of the centre of mass.
+const trailGeo = new THREE.BufferGeometry().setFromPoints(
+  D.qpos.map(q => new THREE.Vector3(q[0], q[1], -D.wall_z + 0.01)));
+const trail = new THREE.Line(trailGeo, new THREE.LineBasicMaterial({ color: 0xd6453d, transparent: true, opacity: 0.45 }));
+scene.add(trail);
+
+// --- cameras ---------------------------------------------------------------
+const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 500);
+camera.up.set(0, 0, 1);
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(cx, cy, 0);
+let topView = true;
+function placeCamera() {
+  // Distance that fits the whole arena, whatever the window's aspect ratio.
+  const tan = Math.tan(THREE.MathUtils.degToRad(camera.fov / 2));
+  const d = 1.1 * Math.max((ymax - ymin + 2) / (2 * tan),
+                           (xmax - xmin + 2) / (2 * tan * camera.aspect));
+  if (topView) camera.position.set(cx, cy - 0.001, d);
+  else camera.position.set(cx - 0.15 * d, cy - 0.85 * d, 0.6 * d);
+  controls.target.set(cx, cy, 0);
+  controls.update();
+}
+
+function resize() {
+  const w = view.clientWidth, h = view.clientHeight;
+  renderer.setSize(w, h);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+addEventListener("resize", () => { resize(); placeCamera(); });
+
+// --- per-frame state -------------------------------------------------------
+const mat = new THREE.Matrix4(), hidden = new THREE.Matrix4().makeScale(0, 0, 0), col = new THREE.Color();
+const arrowLen = D.arrow_length;
+function setFrame(k) {
+  const [x, y, th] = D.qpos[k];
+  const c = Math.cos(th), s = Math.sin(th);
+  load.position.set(x, y, 0);
+  load.rotation.set(0, 0, th);
+  const status = D.status[k], phi = D.phi[k];
+  let nAtt = 0, nPull = 0, nInf = 0;
+  for (let i = 0; i < N; i++) {
+    const st = status.charCodeAt(i) - 48;
+    const [lx, ly] = D.sites.pos[i], [nx, ny] = D.sites.normal[i];
+    const wx = x + c * lx - s * ly, wy = y + s * lx + c * ly;
+    const wnx = c * nx - s * ny, wny = s * nx + c * ny;
+    if (st === 0) {
+      ants.setMatrixAt(i, hidden);
+    } else {
+      nAtt++;
+      mat.makeTranslation(wx + wnx * antR, wy + wny * antR, 0);
+      ants.setMatrixAt(i, mat);
+      ants.setColorAt(i, col.setHex(STATUS_COLOR[st]));
+    }
+    const pulling = st === 1 || st === 2;
+    if (pulling) { nPull++; if (st === 1) nInf++; }
+    const a = phi[i] * Math.PI / 180, pc = Math.cos(a), ps = Math.sin(a);
+    const L = pulling ? arrowLen : 0;
+    const dx = (pc * wnx - ps * wny) * L, dy = (ps * wnx + pc * wny) * L;
+    arrowPos.set([wx, wy, D.load_z + 0.02, wx + dx, wy + dy, D.load_z + 0.02], 6 * i);
+    if (pulling) { col.setHex(STATUS_COLOR[st]); arrowCol.set([col.r, col.g, col.b, col.r, col.g, col.b], 6 * i); }
+  }
+  ants.instanceMatrix.needsUpdate = true;
+  ants.instanceColor.needsUpdate = true;
+  arrowGeo.attributes.position.needsUpdate = true;
+  arrowGeo.attributes.color.needsUpdate = true;
+  trailGeo.setDrawRange(0, k + 1);
+
+  const t = Math.round(D.time[k] * 10) / 10, m = Math.floor(t / 60);
+  clock.textContent = `${String(m).padStart(2, "0")}:${(t - 60 * m).toFixed(1).padStart(4, "0")}`;
+  document.getElementById("n-att").textContent = nAtt;
+  document.getElementById("n-pull").textContent = nPull;
+  document.getElementById("n-inf").textContent = nInf;
+  document.getElementById("solved").textContent = D.solved[k] ? "· SOLVED" : "";
+  scrub.value = k;
+}
+
+// --- playback --------------------------------------------------------------
+const playBtn = document.getElementById("play"), scrub = document.getElementById("scrub");
+const clock = document.getElementById("clock"), speed = document.getElementById("speed");
+document.getElementById("title").textContent = D.title;
+scrub.max = T - 1;
+let frame = 0, playing = false, acc = 0, last = performance.now();
+const fps = D.fps;
+function setPlaying(p) { playing = p; playBtn.textContent = p ? "❚❚ Pause" : "▶ Play"; }
+playBtn.onclick = () => { if (frame >= T - 1) frame = 0; setPlaying(!playing); };
+scrub.oninput = () => { frame = +scrub.value; setFrame(frame); };
+document.getElementById("cam").onclick = e => {
+  topView = !topView; e.target.textContent = topView ? "3D view" : "Top view"; placeCamera();
+};
+addEventListener("keydown", e => {
+  if (e.target.tagName === "SELECT") return;
+  if (e.code === "Space") { e.preventDefault(); playBtn.click(); }
+  else if (e.code === "ArrowRight") { setPlaying(false); frame = Math.min(T - 1, frame + 1); setFrame(frame); }
+  else if (e.code === "ArrowLeft") { setPlaying(false); frame = Math.max(0, frame - 1); setFrame(frame); }
+});
+
+function loop(now) {
+  const dt = (now - last) / 1000; last = now;
+  if (playing) {
+    acc += dt * fps * +speed.value;
+    const n = Math.floor(acc);
+    if (n > 0) {
+      acc -= n;
+      frame = Math.min(T - 1, frame + n);
+      setFrame(frame);
+      if (frame >= T - 1) setPlaying(false);
+    }
+  }
+  controls.update();
+  renderer.setClearColor(css("--bg"));
+  renderer.render(scene, camera);
+  requestAnimationFrame(loop);
+}
+
+resize();
+placeCamera();
+setFrame(0);
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>

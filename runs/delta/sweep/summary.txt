@@ -1,0 +1,19 @@
+Large arena, N_max sweep, zero-shot (run B weights), 64 attempts x 30 min, seeds PRNGKey(10_000)
+RTX 4090 (Delta private pool), 2026-10-28. Per-attempt JSON was not retrieved before the sandbox
+was finished; these lines are copied from the sandbox's printed output.
+
+N_max 1
+  paper rule: solved  0.0% (0/64) | time     nan s | path    nan d_cor | final dist  7.36 d_cor
+       MAPPO: solved  0.0% (0/64) | time     nan s | path    nan d_cor | final dist  7.48 d_cor
+          BC: solved  0.0% (0/64) | time     nan s | path    nan d_cor | final dist  7.50 d_cor
+  validation (16 x 15 min) solved: paper model 0.000, paper policy 0.000
+
+N_max 60
+  paper rule: solved 42.2% (27/64) | time  1115.7 s | path   53.7 d_cor | final dist  3.33 d_cor
+       MAPPO: solved 34.4% (22/64) | time  1239.8 s | path   59.6 d_cor | final dist  4.13 d_cor
+          BC: solved 31.2% (20/64) | time  1246.2 s | path   55.8 d_cor | final dist  4.26 d_cor
+  validation (16 x 15 min) solved: paper model 0.062, paper policy 0.250
+
+N_max 150: not finished (sandbox lifetime ended during its evaluation).
+
+For reference, N_max 120 (runs/delta/log_B.txt): paper rule 22/64, BC 27/64, MAPPO 29/64.

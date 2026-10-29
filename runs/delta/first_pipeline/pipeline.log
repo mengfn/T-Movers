@@ -1,0 +1,8 @@
+[10:10:54] setup ok: [CudaDevice(id=0)]
+[10:10:54] validation
+[10:15:16] validation exit 0
+[10:15:16] benchmark
+[10:16:53] benchmark exit 0
+[10:16:53] training for 3 h
+[10:41:13] training exit 143
+[10:41:13] done

@@ -1,0 +1,32 @@
+devices [CudaDevice(id=0)] | obs 8 | agents 120
+behaviour cloning: nll 1.394 -> 0.275, pull agreement 0.959
+update    10 |    271s |     2420 decisions/s | reward +0.0022 | solved 87/87 | dist 6.63 d_cor | pull 0.72 | entropy 0.282 | v_loss 0.0614
+update    20 |    296s |     4433 decisions/s | reward +0.0005 | solved 12/12 | dist 6.49 d_cor | pull 0.87 | entropy 0.208 | v_loss 0.0074
+update    30 |    321s |     6122 decisions/s | reward +0.0006 | solved 20/20 | dist 6.44 d_cor | pull 0.94 | entropy 0.112 | v_loss 0.0106
+update    40 |    347s |     7565 decisions/s | reward +0.0008 | solved 39/39 | dist 6.47 d_cor | pull 0.96 | entropy 0.058 | v_loss 0.0162
+update    50 |    371s |     8822 decisions/s | reward +0.0011 | solved 39/952 | dist 6.53 d_cor | pull 0.93 | entropy 0.069 | v_loss 0.0168
+update    60 |    397s |     9911 decisions/s | reward +0.0010 | solved 49/88 | dist 6.59 d_cor | pull 0.89 | entropy 0.095 | v_loss 0.0225
+update    70 |    422s |    10864 decisions/s | reward +0.0002 | solved 8/20 | dist 6.59 d_cor | pull 0.93 | entropy 0.061 | v_loss 0.0049
+update    80 |    448s |    11713 decisions/s | reward +0.0002 | solved 15/33 | dist 6.65 d_cor | pull 0.96 | entropy 0.041 | v_loss 0.0076
+update    90 |    473s |    12475 decisions/s | reward +0.0003 | solved 21/52 | dist 6.76 d_cor | pull 0.98 | entropy 0.026 | v_loss 0.0078
+update   100 |    497s |    13176 decisions/s | reward +0.0015 | solved 66/960 | dist 6.62 d_cor | pull 0.90 | entropy 0.086 | v_loss 0.0223
+update   110 |    523s |    13789 decisions/s | reward +0.0008 | solved 36/72 | dist 6.58 d_cor | pull 0.92 | entropy 0.058 | v_loss 0.0128
+update   120 |    548s |    14348 decisions/s | reward +0.0003 | solved 13/37 | dist 6.60 d_cor | pull 0.95 | entropy 0.042 | v_loss 0.0059
+update   130 |    573s |    14863 decisions/s | reward +0.0004 | solved 21/55 | dist 6.69 d_cor | pull 0.96 | entropy 0.036 | v_loss 0.0087
+update   140 |    598s |    15339 decisions/s | reward +0.0002 | solved 16/54 | dist 6.78 d_cor | pull 0.97 | entropy 0.030 | v_loss 0.0057
+update   150 |    623s |    15773 decisions/s | reward +0.0017 | solved 66/927 | dist 6.62 d_cor | pull 0.87 | entropy 0.105 | v_loss 0.0190
+update   160 |    649s |    16166 decisions/s | reward +0.0005 | solved 16/54 | dist 6.54 d_cor | pull 0.93 | entropy 0.051 | v_loss 0.0066
+update   170 |    674s |    16533 decisions/s | reward +0.0003 | solved 19/57 | dist 6.53 d_cor | pull 0.95 | entropy 0.045 | v_loss 0.0098
+update   180 |    699s |    16880 decisions/s | reward +0.0003 | solved 20/72 | dist 6.67 d_cor | pull 0.96 | entropy 0.037 | v_loss 0.0054
+update   190 |    724s |    17206 decisions/s | reward +0.0010 | solved 45/759 | dist 6.65 d_cor | pull 0.94 | entropy 0.049 | v_loss 0.0135
+update   200 |    749s |    17504 decisions/s | reward +0.0012 | solved 52/205 | dist 6.51 d_cor | pull 0.89 | entropy 0.079 | v_loss 0.0174
+update   210 |    774s |    17779 decisions/s | reward +0.0006 | solved 20/52 | dist 6.47 d_cor | pull 0.92 | entropy 0.052 | v_loss 0.0084
+update   220 |    799s |    18039 decisions/s | reward +0.0005 | solved 25/82 | dist 6.48 d_cor | pull 0.93 | entropy 0.044 | v_loss 0.0078
+update   230 |    824s |    18288 decisions/s | reward +0.0005 | solved 27/84 | dist 6.62 d_cor | pull 0.94 | entropy 0.038 | v_loss 0.0078
+update   240 |    849s |    18527 decisions/s | reward +0.0013 | solved 54/791 | dist 6.66 d_cor | pull 0.88 | entropy 0.075 | v_loss 0.0152
+update   250 |    874s |    18740 decisions/s | reward +0.0007 | solved 30/126 | dist 6.64 d_cor | pull 0.89 | entropy 0.071 | v_loss 0.0085
+update   260 |    899s |    18945 decisions/s | reward +0.0004 | solved 11/62 | dist 6.60 d_cor | pull 0.92 | entropy 0.053 | v_loss 0.0038
+update   270 |    925s |    19139 decisions/s | reward +0.0003 | solved 15/91 | dist 6.55 d_cor | pull 0.93 | entropy 0.051 | v_loss 0.0062
+update   280 |    950s |    19325 decisions/s | reward +0.0006 | solved 33/100 | dist 6.60 d_cor | pull 0.93 | entropy 0.048 | v_loss 0.0075
+update   290 |    974s |    19504 decisions/s | reward +0.0014 | solved 57/780 | dist 6.60 d_cor | pull 0.84 | entropy 0.108 | v_loss 0.0159
+update   300 |    999s |    19671 decisions/s | reward +0.0007 | solved 26/111 | dist 6.60 d_cor | pull 0.88 | entropy 0.074 | v_loss 0.0076
