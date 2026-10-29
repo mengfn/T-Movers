@@ -5,6 +5,31 @@ Dreyer, Haluts, Korman, Gov, Fonio & Feinerman, *Comparing cooperative geometric
 puzzle solving in ants versus humans*, PNAS 2024
 ([doi:10.1073/pnas.2414274121](https://doi.org/10.1073/pnas.2414274121)).
 
+## Demo
+
+The fastest solved attempt out of 8 in the large arena (N_max = 120), and in
+the small one (N_max = 15). Orange ants are informed (they pull toward the
+next slit), blue ones pull, grey ones lift without pulling; arrows are pull
+forces. The GIFs play at 48× speed.
+
+| Learned ants (MAPPO, run B) | Paper's rule |
+|---|---|
+| ![Learned ants moving the T-load through both slits](media/demo_mappo.gif) | ![Paper-rule ants moving the T-load through both slits](media/demo_paper.gif) |
+| Large arena, solved in 518 s | Large arena, solved in 845 s |
+| ![Learned ants moving the small T-load](media/small_mappo.gif) | ![Paper-rule ants moving the small T-load](media/small_paper.gif) |
+| Small arena, solved in 248 s | Small arena, solved in 209 s |
+
+Over 64 attempts of 30 min, the learned ants solve the large arena 45% of the
+time against 34% for the paper's rule (not significant, p = 0.28), and the
+small arena 86% against 88%. Each demo also has an interactive three.js
+viewer (`media/*.html`, open it locally); make your own with
+`scripts/demo.py`:
+
+```bash
+uv run python scripts/demo.py --policy runs/delta/run_B/actor.json --out media/demo_mappo
+uv run python scripts/demo.py --arena small --minutes 15 --out media/small_paper
+```
+
 ## How it maps to the paper
 
 | Paper (SI Appendix Note 1) | Here |
